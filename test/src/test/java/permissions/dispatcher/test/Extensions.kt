@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Process
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.AppOpsManagerCompat
 import android.support.v4.app.Fragment
@@ -38,17 +40,28 @@ fun mockGetActivity(fragment: Fragment, result: AppCompatActivity) {
     PowerMockito.`when`(fragment.activity).thenReturn(result)
 }
 
-fun getRequestCameraConstant(clazz: Class<*>): Int {
-    val field = clazz.getDeclaredField("REQUEST_SHOWCAMERA")
-    field.isAccessible = true
-    return field.getInt(null)
+fun mockCanDrawOverlays(result: Boolean) {
+    PowerMockito.`when`(Settings.canDrawOverlays(any(Context::class.java))).thenReturn(result)
 }
 
-fun getPermissionRequestConstant(clazz: Class<*>): Array<String> {
-    val field = clazz.getDeclaredField("PERMISSION_SHOWCAMERA")
+private fun getPrivateField(clazz: Class<*>, fieldName: String): Field {
+    val field = clazz.getDeclaredField(fieldName)
     field.isAccessible = true
-    return field.get(null) as Array<String>
+    return field
 }
+
+private fun getPrivateIntField(clazz: Class<*>, fieldName: String): Int {
+    return getPrivateField(clazz, fieldName).getInt(null)
+}
+
+fun getRequestSystemAlertWindow(clazz: Class<*>)
+        = getPrivateIntField(clazz, "REQUEST_SYSTEMALERTWINDOW")
+
+fun getRequestCameraConstant(clazz: Class<*>)
+        = getPrivateIntField(clazz, "REQUEST_SHOWCAMERA")
+
+fun getPermissionRequestConstant(clazz: Class<*>)
+        = getPrivateField(clazz, "PERMISSION_SHOWCAMERA").get(null) as Array<String>
 
 fun overwriteCustomManufacture(manufactureText: String = "Xiaomi") {
     val modifiersField = Field::class.java.getDeclaredField("modifiers")
@@ -86,4 +99,8 @@ fun mockMyUid() {
 fun mockNoteOp(result: Int) {
     mockMyUid()
     PowerMockito.`when`(AppOpsManagerCompat.noteOp(any(Context::class.java), anyString(), anyInt(), anyString())).thenReturn(result)
+}
+
+fun mockUriParse(result: Uri? = null) {
+    PowerMockito.`when`(Uri.parse(anyString())).thenReturn(result)
 }
