@@ -12,14 +12,14 @@ import permissions.dispatcher.PermissionRequest
 import permissions.dispatcher.RuntimePermissions
 
 @RuntimePermissions
-class ActivityWithSystemAlertWindowKtAllAnnotations : AppCompatActivity() {
+open class ActivityWithSystemAlertWindowKtAllAnnotations : AppCompatActivity() {
 
     @NeedsPermission(Manifest.permission.SYSTEM_ALERT_WINDOW)
     internal fun systemAlertWindow() {
     }
 
     @OnShowRationale(Manifest.permission.SYSTEM_ALERT_WINDOW)
-    internal fun showRationaleForSystemAlertWindow(request: PermissionRequest) {
+    internal fun showRationaleForSystemAlertWindow(request: PermissionRequest?) {
     }
 
     @OnPermissionDenied(Manifest.permission.SYSTEM_ALERT_WINDOW)

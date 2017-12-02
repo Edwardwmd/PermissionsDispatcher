@@ -8,7 +8,7 @@ import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 
 @RuntimePermissions
-class ActivityWithSystemAlertWindowKt : AppCompatActivity() {
+open class ActivityWithSystemAlertWindowKt : AppCompatActivity() {
 
     @NeedsPermission(Manifest.permission.SYSTEM_ALERT_WINDOW)
     internal fun systemAlertWindow() {
